@@ -1,4 +1,12 @@
+
 Mostrar la lista de empleados
+
+@if(Session::has('mensaje'))
+{{ Session::get('mensaje') }}
+
+@endif
+
+<a href="{{ url('empleado/create') }}">Registrar un nuevo empleado</a>
 <table class="table table-light">
     <thead class="thead-light">
         <tr>
@@ -11,12 +19,14 @@ Mostrar la lista de empleados
             <th>Acciones</th>
         </tr>
     </thead>
+
     <tbody>
         @foreach ($empleados as $empleado)
         <tr>
             <td>{{ $empleado->id }}</td>
+
             <td>
-                <img src="{{asset('storage').'/'.$empleado->Foto}}" alt="">
+                <img src="{{ asset('storage').'/'.$empleado->Foto}}" width="100" alt="">
             </td>
             <td>{{ $empleado->Nombre }}</td>
             <td>{{ $empleado->ApellidoPaterno }}</td>

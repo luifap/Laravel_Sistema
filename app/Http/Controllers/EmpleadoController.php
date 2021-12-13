@@ -50,10 +50,9 @@ class EmpleadoController extends Controller
 
 
        Empleado::insert($datosEmpleado);
-       
 
-       return response()->json($datosEmpleado);
-
+       //return response()->json($datosEmpleado);
+       return redirect('empleado')->with('mensaje','Empleado agregado con éxito');
     }
 
     /**
@@ -77,7 +76,7 @@ class EmpleadoController extends Controller
     {
         //
         $empleado=Empleado::findOrFail($id);
-        return view('empleado.edit', compact('empleado'));
+        return view('empleado.edit', compact('empleado') );
     }
 
     /**
@@ -94,10 +93,13 @@ class EmpleadoController extends Controller
 
         if($request->hasFile('Foto')){
             $empleado=Empleado::findOrFail($id);
-            
+
             Storage::delete('public/'.$empleado->Foto);
+
             $datosEmpleado['Foto']=$request->file('Foto')->store('uploads','public');
         }
+
+
 
         Empleado::where('id','=',$id)->update($datosEmpleado);
         $empleado=Empleado::findOrFail($id);
@@ -114,7 +116,18 @@ class EmpleadoController extends Controller
     public function destroy($id)
     {
         //
-        Empleado::destroy($id);
-        return redirect('empleado');
+
+        $empleado=Empleado::findOrFail($id);
+
+        if(Storage::delete('public/'.$empleado->Foto)){
+
+            Empleado::destroy($id);
+
+        }
+
+
+        
+
+        return redirect('empleado')->with('mensaje','Empleado Borrado');
     }
 }
