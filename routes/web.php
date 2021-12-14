@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\EmpleadoController;
+use Illuminate\Support\Facades\Auth;
 
 /*
 |--------------------------------------------------------------------------
@@ -15,16 +16,22 @@ use App\Http\Controllers\EmpleadoController;
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('auth.login');
 });
 
 /*Route::get('/empleado', function () {
     return view('empleado.index');
 });
-
 Route::get('/empleado/create',[EmpleadoController::class,'create']);*/
 
-Route::resource('empleado', EmpleadoController::class);
-Auth::routes();
+Route::resource('empleado', EmpleadoController::class)->middleware('auth'); //El middleware realiza una seguridad que si tienes en memoria la ruta de crear o editar y no estas logeado no te deja entrar
+Auth::routes(['register'=>false,'reset'=>false]); //Los que tienen false desaparecen
 
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+Route::get('/home', [EmpleadoController::class, 'index'])->name('home');
+
+
+
+Route::group(['middleware' => 'auth'], function () {
+
+    Route::get('/', [EmpleadoController::class, 'index'])->name('home');
+});
